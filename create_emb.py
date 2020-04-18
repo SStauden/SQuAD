@@ -1,6 +1,7 @@
 
 import warnings
 warnings.filterwarnings('ignore')
+from InferSent.models import InferSent
 import pickle
 import numpy as np
 import pandas as pd
@@ -44,21 +45,30 @@ def gen_dict_embeddings(datafile="data/train-v1.1.json"):
     blob = TextBlob(" ".join(paras))
     sentences = [item.raw for item in blob.sentences]
 
-    # infersent = torch.load('InferSent/encoder/infersent.allnli.pickle', map_location=lambda storage, loc: storage, pickle_module=pickle)
-    infersent = torch.load('infersent.allnli.pickle', map_location=lambda storage, loc: storage)
-    infersent.set_glove_path("InferSent/dataset/GloVe/glove.840B.300d.txt")
+    # # infersent = torch.load('InferSent/encoder/infersent.allnli.pickle', map_location=lambda storage, loc: storage, pickle_module=pickle)
+    # infersent = torch.load('infersent.allnli.pickle', map_location=lambda storage, loc: storage)
+    # infersent.set_glove_path("InferSent/dataset/GloVe/glove.840B.300d.txt")
+
+    V = 2
+    MODEL_PATH = 'Infersent/encoder/infersent%s.pkl' % V
+    params_model = {'bsize': 64, 'word_emb_dim': 300, 'enc_lstm_dim': 2048,
+                    'pool_type': 'max', 'dpout_model': 0.0, 'version': V}
+    infersent = InferSent(params_model)
+    infersent.load_state_dict(torch.load(MODEL_PATH))
+    W2V_PATH = 'Infersent/fastText/crawl-300d-2M.vec'
+    infersent.set_w2v_path(W2V_PATH)
 
     infersent.build_vocab(sentences, tokenize=True)
 
     dict_embeddings = {}
     for i in range(len(sentences)):
-        print(i)
+        print("processing sentence {}/{}\r".format(i, len(sentences)), end="")
         dict_embeddings[sentences[i]] = infersent.encode([sentences[i]], tokenize=True)
 
     questions = list(df["question"])
 
     for i in range(len(questions)):
-        print(i)
+        print("processing question {}/{}\r".format(i, len(questions)), end="")
         dict_embeddings[questions[i]] = infersent.encode([questions[i]], tokenize=True)
 
     with open('data/{}_dict_embeddings.pickle'.format(outfile), 'wb') as handle:
