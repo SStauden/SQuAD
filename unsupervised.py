@@ -119,4 +119,5 @@ def run_unsupervised(csv_data="data/train.csv", emb_data="data/dict_embeddings.p
 
   
 if __name__ == "__main__":
-    run_unsupervised()
+    run_unsupervised(csv_data="data/train.csv", 
+                     emb_data="data/dict_embeddings.pickle")
