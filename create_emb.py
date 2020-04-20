@@ -62,13 +62,15 @@ def gen_dict_embeddings(datafile="data/train-v1.1.json"):
 
     dict_embeddings = {}
     for i in range(len(sentences)):
-        print("processing sentence {}/{}\r".format(i, len(sentences)), end="")
+        # print("processing sentence {}/{}\r".format(i, len(sentences)), end="")
+        print("processing sentence {}/{}".format(i, len(sentences)))
         dict_embeddings[sentences[i]] = infersent.encode([sentences[i]], tokenize=True)
 
     questions = list(df["question"])
 
     for i in range(len(questions)):
-        print("processing question {}/{}\r".format(i, len(questions)), end="")
+        # print("processing question {}/{}\r".format(i, len(questions)), end="")
+        print("processing question {}/{}".format(i, len(questions)))
         dict_embeddings[questions[i]] = infersent.encode([questions[i]], tokenize=True)
 
     with open('data/{}_dict_embeddings.pickle'.format(outfile), 'wb') as handle:
