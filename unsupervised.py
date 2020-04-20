@@ -117,6 +117,15 @@ def run_unsupervised(csv_data="data/train.csv", emb_data="data/dict_embeddings.p
 
     predicted.to_csv("train_detect_sent.csv", index=None)
 
+    # --
+
+    predicted = pd.read_csv("train_detect_sent.csv").reset_index(drop=True)
+    
+    predicted["root_match_idx"] = predicted.apply(match_roots, axis = 1)
+    predicted["root_match_idx_first"]= predicted["root_match_idx"].apply(lambda x: x[0] if len(x)>0 else 0)
+
+    predicted.to_csv("train_detect_sent.csv", index=None)
+
   
 if __name__ == "__main__":
     run_unsupervised(csv_data="data/train.csv", 
