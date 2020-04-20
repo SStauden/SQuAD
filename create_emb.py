@@ -50,12 +50,12 @@ def gen_dict_embeddings(datafile="data/train-v1.1.json"):
     # infersent.set_glove_path("InferSent/dataset/GloVe/glove.840B.300d.txt")
 
     V = 2
-    MODEL_PATH = 'Infersent/encoder/infersent%s.pkl' % V
+    MODEL_PATH = 'InferSent/encoder/infersent%s.pkl' % V
     params_model = {'bsize': 64, 'word_emb_dim': 300, 'enc_lstm_dim': 2048,
                     'pool_type': 'max', 'dpout_model': 0.0, 'version': V}
     infersent = InferSent(params_model)
     infersent.load_state_dict(torch.load(MODEL_PATH))
-    W2V_PATH = 'Infersent/fastText/crawl-300d-2M.vec'
+    W2V_PATH = 'InferSent/fastText/crawl-300d-2M.vec'
     infersent.set_w2v_path(W2V_PATH)
 
     infersent.build_vocab(sentences, tokenize=True)
