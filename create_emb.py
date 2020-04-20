@@ -12,7 +12,7 @@ from scipy import spatial
 import torch
 import spacy
 import os
-
+import sys
 # en_nlp = spacy.load('en')
 
 def gen_dict_embeddings(datafile="data/train-v1.1.json"):
@@ -64,6 +64,7 @@ def gen_dict_embeddings(datafile="data/train-v1.1.json"):
     for i in range(len(sentences)):
         # print("processing sentence {}/{}\r".format(i, len(sentences)), end="")
         print("processing sentence {}/{}".format(i, len(sentences)))
+        sys.stdout.flush()
         dict_embeddings[sentences[i]] = infersent.encode([sentences[i]], tokenize=True)
 
     questions = list(df["question"])
@@ -71,6 +72,7 @@ def gen_dict_embeddings(datafile="data/train-v1.1.json"):
     for i in range(len(questions)):
         # print("processing question {}/{}\r".format(i, len(questions)), end="")
         print("processing question {}/{}".format(i, len(questions)))
+        sys.stdout.flush()
         dict_embeddings[questions[i]] = infersent.encode([questions[i]], tokenize=True)
 
     with open('data/{}_dict_embeddings.pickle'.format(outfile), 'wb') as handle:
